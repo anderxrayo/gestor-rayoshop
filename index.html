@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rayo Shop | Ultimate Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-bolt-lightning"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>RAYO</h1>
+                        <p class="logo-subtitle">STREAM CONTROL</p>
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Administrador</span>
+                        <span class="user-status">
+                            <span class="status-dot active"></span>
+                            En línea
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <p class="menu-label">PANEL PRINCIPAL</p>
+                    <a href="#" class="menu-item active" onclick="switchTab('tab-ventas')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-badge" id="badge-ventas">0</div>
+                    </a>
+                    <a href="#" class="menu-item" onclick="switchTab('tab-stats')">
+                        <i class="fas fa-chart-network"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="switchTab('tab-clientes')">
+                        <i class="fas fa-users"></i>
+                        <span>Clientes</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <p class="menu-label">GESTIÓN</p>
+                    <a href="#" class="menu-item" onclick="abrirModalNuevaVenta()">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nueva Venta</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="abrirModalImportar()">
+                        <i class="fas fa-file-import"></i>
+                        <span>Importar CSV</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="descargarBackup()">
+                        <i class="fas fa-database"></i>
+                        <span>Backup Data</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <p class="menu-label">SERVICIOS</p>
+                    <div class="services-list" id="services-list">
+                        <!-- Los servicios se cargarán dinámicamente -->
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="system-status">
+                        <div class="status-item">
+                            <i class="fas fa-server"></i>
+                            <span>Storage: <span id="storage-percent">0%</span></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="storage-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="page-title">
+                        <h2>Dashboard</h2>
+                        <p id="current-date"></p>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               class="search-input" 
+                               placeholder="Buscar cliente, servicio o ID..."
+                               onkeyup="filtrarVentas()"
+                               id="buscador">
+                    </div>
+                    <button class="btn-notification" onclick="mostrarNotificaciones()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-badge">0</span>
+                    </button>
+                    <button class="btn-quick-action" onclick="abrirModalNuevaVenta()">
+                        <i class="fas fa-bolt"></i>
+                        Nueva Venta
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards - Inversión y Ganancia -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon revenue">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="tVentas">S/ 0.00</h3>
+                        <p>Ventas Totales</p>
+                    </div>
+                    <div class="stat-trend" id="trend-ventas">
+                        <i class="fas fa-arrow-up"></i>
+                        0%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon investment">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="tInversion">S/ 0.00</h3>
+                        <p>Inversión Total</p>
+                    </div>
+                    <div class="stat-trend" id="trend-inversion">
+                        <i class="fas fa-minus"></i>
+                        0%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon profit">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="tGanancia">S/ 0.00</h3>
+                        <p>Ganancia Neta</p>
+                    </div>
+                    <div class="stat-trend" id="trend-ganancia">
+                        <i class="fas fa-arrow-up"></i>
+                        0%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon margin">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="tMargen">0%</h3>
+                        <p>Margen de Ganancia</p>
+                    </div>
+                    <div class="stat-trend" id="trend-margen">
+                        <i class="fas fa-minus"></i>
+                        0%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Tabs -->
+            <div class="content-tabs">
+                <div class="tabs-header">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('tab-ventas')">
+                            <i class="fas fa-table"></i>
+                            Operaciones Activas
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tab-stats')">
+                            <i class="fas fa-chart-pie"></i>
+                            Analytics
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tab-clientes')">
+                            <i class="fas fa-users"></i>
+                            Base de Clientes
+                        </button>
+                    </div>
+                    <div class="tab-actions">
+                        <button class="btn-action" onclick="exportarExcel()">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar
+                        </button>
+                        <button class="btn-action" onclick="filtrarExpirados()">
+                            <i class="fas fa-clock"></i>
+                            Ver Expirados
+                        </button>
+                        <button class="btn-action" onclick="mostrarTodos()">
+                            <i class="fas fa-eye"></i>
+                            Ver Todos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Ventas -->
+                <div id="tab-ventas" class="tab-content active">
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table id="tablaVentas" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-hashtag"></i>
+                                                ID
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-user"></i>
+                                                Cliente
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-play-circle"></i>
+                                                Servicio
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-calendar-clock"></i>
+                                                Expiración
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-clock"></i>
+                                                Tiempo Restante
+                                                <br><small class="header-sub">(Actualización en vivo)</small>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-money-bill"></i>
+                                                Ganancia
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-battery"></i>
+                                                Estado
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-cell">
+                                                <i class="fas fa-cog"></i>
+                                                Acciones
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Las filas se generan dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Stats -->
+                <div id="tab-stats" class="tab-content">
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-bar"></i> Rentabilidad por Mes</h3>
+                                <select class="chart-filter" id="chart-filter-bar" onchange="updateCharts()">
+                                    <option value="6">Últimos 6 meses</option>
+                                    <option value="12">Este año</option>
+                                    <option value="all">Todo</option>
+                                </select>
+                            </div>
+                            <canvas id="barChart"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-pie"></i> Distribución de Servicios</h3>
+                            </div>
+                            <canvas id="doughnutChart"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-line"></i> Tendencias de Ventas</h3>
+                                <select class="chart-filter" id="chart-filter-line" onchange="updateCharts()">
+                                    <option value="7">Últimos 7 días</option>
+                                    <option value="30">Últimos 30 días</option>
+                                    <option value="90">Últimos 90 días</option>
+                                </select>
+                            </div>
+                            <canvas id="lineChart"></canvas>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-wallet"></i> Métodos de Pago</h3>
+                            </div>
+                            <canvas id="paymentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Clientes -->
+                <div id="tab-clientes" class="tab-content">
+                    <div class="clients-container">
+                        <div class="clients-stats">
+                            <div class="client-stat-card">
+                                <i class="fas fa-user-plus"></i>
+                                <div>
+                                    <h4>Nuevos (30d)</h4>
+                                    <p class="stat-number" id="clientes-nuevos">0</p>
+                                </div>
+                            </div>
+                            <div class="client-stat-card">
+                                <i class="fas fa-star"></i>
+                                <div>
+                                    <h4>Clientes VIP</h4>
+                                    <p class="stat-number" id="clientes-vip">0</p>
+                                </div>
+                            </div>
+                            <div class="client-stat-card">
+                                <i class="fas fa-sync-alt"></i>
+                                <div>
+                                    <h4>Renovaciones</h4>
+                                    <p class="stat-number" id="renovaciones">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clients-list" id="clients-list">
+                            <!-- Lista de clientes se generará dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <span>© 2024 Rayo Shop. Todos los derechos reservados.</span>
+                        <span class="version">v2.1.0</span>
+                    </div>
+                    <div class="footer-right">
+                        <span class="live-indicator">
+                            <span class="live-dot"></span>
+                            Sincronizado en tiempo real
+                        </span>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modal Nueva Venta -->
+    <div id="modalVenta" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bolt"></i> Nueva Operación</h3>
+                <button class="modal-close" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="formVenta" class="modal-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cliente"><i class="fas fa-user"></i> Cliente *</label>
+                        <input type="text" id="cliente" required 
+                               placeholder="Nombre completo del cliente">
+                    </div>
+                    <div class="form-group">
+                        <label for="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp *</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">+51</span>
+                            <input type="tel" id="whatsapp" required 
+                                   placeholder="987654321">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicio"><i class="fas fa-play-circle"></i> Servicio *</label>
+                        <div class="input-with-suggestions">
+                            <input type="text" id="servicio" 
+                                   placeholder="Netflix, Disney+, HBO Max, etc."
+                                   oninput="mostrarSugerenciasServicios()"
+                                   required>
+                            <div id="sugerencias-servicios" class="sugerencias-container"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan"><i class="fas fa-tv"></i> Plan</label>
+                        <select id="plan" class="styled-select">
+                            <option value="1 Pantalla">1 Pantalla</option>
+                            <option value="2 Pantallas">2 Pantallas</option>
+                            <option value="4 Pantallas">4 Pantallas</option>
+                            <option value="Familiar">Plan Familiar</option>
+                            <option value="Individual">Individual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo"><i class="fas fa-envelope"></i> Correo *</label>
+                        <input type="email" id="correo" required 
+                               placeholder="cuenta@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="clave"><i class="fas fa-key"></i> Contraseña *</label>
+                        <input type="text" id="clave" required 
+                               placeholder="PIN o contraseña">
+                    </div>
+                    <div class="form-group">
+                        <label for="perfil"><i class="fas fa-id-card"></i> Perfil</label>
+                        <input type="text" id="perfil" 
+                               placeholder="Nombre del perfil asignado">
+                    </div>
+                    <div class="form-group">
+                        <label for="metodoPago"><i class="fas fa-credit-card"></i> Pago</label>
+                        <select id="metodoPago" class="styled-select">
+                            <option value="Yape">Yape</option>
+                            <option value="Plin">Plin</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="precio"><i class="fas fa-tag"></i> Precio Venta (S/) *</label>
+                        <input type="number" id="precio" required 
+                               step="0.01" min="0"
+                               placeholder="0.00" oninput="calcularGananciaForm()">
+                    </div>
+                    <div class="form-group">
+                        <label for="costo"><i class="fas fa-money-bill-wave"></i> Costo (S/) *</label>
+                        <input type="number" id="costo" required 
+                               step="0.01" min="0"
+                               placeholder="0.00" oninput="calcularGananciaForm()">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaVenta"><i class="fas fa-calendar"></i> Fecha *</label>
+                        <input type="date" id="fechaVenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duracion"><i class="fas fa-clock"></i> Duración (días) *</label>
+                        <input type="number" id="duracion" required 
+                               min="1" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="vendedor"><i class="fas fa-user-tie"></i> Vendedor</label>
+                        <input type="text" id="vendedor" placeholder="Nombre del vendedor">
+                    </div>
+                    <div class="form-group">
+                        <label for="observaciones"><i class="fas fa-sticky-note"></i> Observaciones</label>
+                        <textarea id="observaciones" rows="2" placeholder="Observaciones adicionales..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridad"><i class="fas fa-flag"></i> Prioridad</label>
+                        <select id="prioridad" class="styled-select">
+                            <option value="normal">Normal</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-summary">
+                    <div class="summary-item">
+                        <span>Ganancia Estimada:</span>
+                        <strong id="gananciaPreview">S/ 0.00</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Margen:</span>
+                        <strong id="margenPreview">0%</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>ROI:</span>
+                        <strong id="roiPreview">0%</strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-bolt"></i>
+                        Registrar Operación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Notificaciones -->
+    <div id="modalNotificaciones" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-bell"></i> Notificaciones</h3>
+                <button class="modal-close" onclick="cerrarModalNotificaciones()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="lista-notificaciones">
+                    <!-- Notificaciones dinámicas -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

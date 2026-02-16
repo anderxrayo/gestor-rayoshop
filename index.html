@@ -22,7 +22,7 @@
                     </div>
                     <div class="logo-text">
                         <h1>RAYO</h1>
-                        <p class="logo-subtitle">STREAM CONTROL</p>
+                        <p class="logo-subtitle">SHOP CONTROL</p>
                     </div>
                 </div>
                 <div class="user-profile">
@@ -42,41 +42,66 @@
             <div class="sidebar-menu">
                 <div class="menu-section">
                     <p class="menu-label">PANEL PRINCIPAL</p>
-                    <a href="#" class="menu-item active" onclick="switchTab('tab-ventas')">
+                    <a href="#" class="menu-item active" onclick="switchTab('tab-streaming')">
                         <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                        <div class="menu-badge" id="badge-ventas">0</div>
+                        <span>Dashboard Streaming</span>
+                        <div class="menu-badge" id="badge-streaming">0</div>
                     </a>
-                    <a href="#" class="menu-item" onclick="switchTab('tab-stats')">
+                    <a href="#" class="menu-item" onclick="switchTab('tab-chatgpt')">
+                        <i class="fas fa-robot"></i>
+                        <span>ChatGPT Plus</span>
+                        <div class="menu-badge" id="badge-chatgpt">0</div>
+                    </a>
+                    <a href="#" class="menu-item" onclick="switchTab('tab-stats-streaming')">
                         <i class="fas fa-chart-network"></i>
-                        <span>Analytics</span>
+                        <span>Analytics Streaming</span>
                     </a>
-                    <a href="#" class="menu-item" onclick="switchTab('tab-clientes')">
-                        <i class="fas fa-users"></i>
-                        <span>Clientes</span>
+                    <a href="#" class="menu-item" onclick="switchTab('tab-stats-chatgpt')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics ChatGPT</span>
                     </a>
                 </div>
 
                 <div class="menu-section">
-                    <p class="menu-label">GESTIÓN</p>
-                    <a href="#" class="menu-item" onclick="abrirModalNuevaVenta()">
+                    <p class="menu-label">GESTIÓN STREAMING</p>
+                    <a href="#" class="menu-item" onclick="abrirModalNuevaVentaStreaming()">
                         <i class="fas fa-plus-circle"></i>
-                        <span>Nueva Venta</span>
+                        <span>Nueva Venta Streaming</span>
                     </a>
-                    <a href="#" class="menu-item" onclick="abrirModalImportar()">
+                    <a href="#" class="menu-item" onclick="abrirModalImportarStreaming()">
                         <i class="fas fa-file-import"></i>
-                        <span>Importar CSV</span>
+                        <span>Importar CSV Streaming</span>
                     </a>
-                    <a href="#" class="menu-item" onclick="descargarBackup()">
+                    <a href="#" class="menu-item" onclick="descargarBackupStreaming()">
                         <i class="fas fa-database"></i>
-                        <span>Backup Data</span>
+                        <span>Backup Streaming</span>
                     </a>
                 </div>
 
                 <div class="menu-section">
-                    <p class="menu-label">SERVICIOS</p>
-                    <div class="services-list" id="services-list">
-                        <!-- Los servicios se cargarán dinámicamente -->
+                    <p class="menu-label">GESTIÓN CHATGPT</p>
+                    <a href="#" class="menu-item" onclick="abrirModalNuevaVentaChatGPT()">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nuevo Acceso ChatGPT</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="abrirModalNuevaCuentaChatGPT()">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Registrar Compra Cuenta ChatGPT</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="abrirModalImportarChatGPT()">
+                        <i class="fas fa-file-import"></i>
+                        <span>Importar CSV ChatGPT</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="descargarBackupChatGPT()">
+                        <i class="fas fa-database"></i>
+                        <span>Backup ChatGPT</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <p class="menu-label">SERVICIOS STREAMING</p>
+                    <div class="services-list" id="services-list-streaming">
+                        <!-- Se cargarán dinámicamente -->
                     </div>
                 </div>
 
@@ -103,260 +128,355 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="page-title">
-                        <h2>Dashboard</h2>
+                        <h2 id="current-tab-title">Dashboard Streaming</h2>
                         <p id="current-date"></p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <div class="search-container">
+                    <div class="search-container" id="search-container-streaming">
                         <i class="fas fa-search"></i>
                         <input type="text" 
                                class="search-input" 
-                               placeholder="Buscar cliente, servicio o ID..."
-                               onkeyup="filtrarVentas()"
-                               id="buscador">
+                               placeholder="Buscar en streaming..."
+                               onkeyup="filtrarVentasStreaming()"
+                               id="buscador-streaming">
                     </div>
-                    <button class="btn-notification" onclick="mostrarNotificaciones()">
+                    <div class="search-container" id="search-container-chatgpt" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               class="search-input" 
+                               placeholder="Buscar en ChatGPT..."
+                               onkeyup="filtrarVentasChatGPT()"
+                               id="buscador-chatgpt">
+                    </div>
+                    <button class="btn-notification" onclick="mostrarNotificacionesStreaming()">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notification-badge">0</span>
+                        <span class="notification-badge" id="notification-badge-streaming">0</span>
                     </button>
-                    <button class="btn-quick-action" onclick="abrirModalNuevaVenta()">
+                    <button class="btn-notification" onclick="mostrarNotificacionesChatGPT()" style="display: none;">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-badge-chatgpt">0</span>
+                    </button>
+                    <button class="btn-quick-action" onclick="abrirModalNuevaVentaStreaming()" id="btn-quick-streaming">
                         <i class="fas fa-bolt"></i>
-                        Nueva Venta
+                        Nueva Venta Streaming
+                    </button>
+                    <button class="btn-quick-action" onclick="abrirModalNuevaVentaChatGPT()" id="btn-quick-chatgpt" style="display: none;">
+                        <i class="fas fa-robot"></i>
+                        Nuevo Acceso ChatGPT
                     </button>
                 </div>
             </header>
 
-            <!-- Stats Cards - Inversión y Ganancia -->
-            <div class="stats-grid">
+            <!-- Stats Cards Streaming -->
+            <div class="stats-grid" id="stats-streaming">
                 <div class="stat-card">
                     <div class="stat-icon revenue">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="tVentas">S/ 0.00</h3>
+                        <h3 id="tVentasStreaming">S/ 0.00</h3>
                         <p>Ventas Totales</p>
                     </div>
-                    <div class="stat-trend" id="trend-ventas">
-                        <i class="fas fa-arrow-up"></i>
-                        0%
+                    <div class="stat-trend" id="trend-ventas-streaming">
+                        <i class="fas fa-arrow-up"></i> 0%
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon investment">
                         <i class="fas fa-hand-holding-usd"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="tInversion">S/ 0.00</h3>
+                        <h3 id="tInversionStreaming">S/ 0.00</h3>
                         <p>Inversión Total</p>
                     </div>
-                    <div class="stat-trend" id="trend-inversion">
-                        <i class="fas fa-minus"></i>
-                        0%
+                    <div class="stat-trend" id="trend-inversion-streaming">
+                        <i class="fas fa-minus"></i> 0%
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon profit">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="tGanancia">S/ 0.00</h3>
+                        <h3 id="tGananciaStreaming">S/ 0.00</h3>
                         <p>Ganancia Neta</p>
                     </div>
-                    <div class="stat-trend" id="trend-ganancia">
-                        <i class="fas fa-arrow-up"></i>
-                        0%
+                    <div class="stat-trend" id="trend-ganancia-streaming">
+                        <i class="fas fa-arrow-up"></i> 0%
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon margin">
                         <i class="fas fa-percentage"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="tMargen">0%</h3>
+                        <h3 id="tMargenStreaming">0%</h3>
                         <p>Margen de Ganancia</p>
                     </div>
-                    <div class="stat-trend" id="trend-margen">
-                        <i class="fas fa-minus"></i>
-                        0%
+                    <div class="stat-trend" id="trend-margen-streaming">
+                        <i class="fas fa-minus"></i> 0%
                     </div>
                 </div>
             </div>
 
-            <!-- Main Content Tabs -->
+            <!-- Stats Cards ChatGPT -->
+            <div class="stats-grid" id="stats-chatgpt" style="display: none;">
+                <div class="stat-card chatgpt-card">
+                    <div class="stat-icon chatgpt-icon">
+                        <i class="fas fa-cart-shopping"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="chatgpt-inversion-cuentas">S/ 0.00</h3>
+                        <p>Inversión en Cuentas</p>
+                    </div>
+                </div>
+                <div class="stat-card chatgpt-card">
+                    <div class="stat-icon chatgpt-icon">
+                        <i class="fas fa-ticket"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="chatgpt-ventas-accesos">S/ 0.00</h3>
+                        <p>Ventas de Accesos</p>
+                    </div>
+                </div>
+                <div class="stat-card chatgpt-card">
+                    <div class="stat-icon chatgpt-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="chatgpt-ganancia">S/ 0.00</h3>
+                        <p>Ganancia Neta ChatGPT</p>
+                    </div>
+                </div>
+                <div class="stat-card chatgpt-card">
+                    <div class="stat-icon chatgpt-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="chatgpt-roi">0%</h3>
+                        <p>ROI / Recuperación</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Content -->
             <div class="content-tabs">
                 <div class="tabs-header">
                     <div class="tabs">
-                        <button class="tab-btn active" onclick="switchTab('tab-ventas')">
+                        <button class="tab-btn active" onclick="switchTab('tab-streaming')">
                             <i class="fas fa-table"></i>
-                            Operaciones Activas
+                            Ventas Streaming
                         </button>
-                        <button class="tab-btn" onclick="switchTab('tab-stats')">
+                        <button class="tab-btn" onclick="switchTab('tab-chatgpt')">
+                            <i class="fas fa-robot"></i>
+                            Ventas ChatGPT
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tab-stats-streaming')">
                             <i class="fas fa-chart-pie"></i>
-                            Analytics
+                            Analytics Streaming
                         </button>
-                        <button class="tab-btn" onclick="switchTab('tab-clientes')">
-                            <i class="fas fa-users"></i>
-                            Base de Clientes
+                        <button class="tab-btn" onclick="switchTab('tab-stats-chatgpt')">
+                            <i class="fas fa-chart-bar"></i>
+                            Analytics ChatGPT
                         </button>
                     </div>
-                    <div class="tab-actions">
-                        <button class="btn-action" onclick="exportarExcel()">
+                    <div class="tab-actions" id="tab-actions-streaming">
+                        <button class="btn-action" onclick="exportarExcelStreaming()">
                             <i class="fas fa-file-excel"></i>
-                            Exportar
+                            Exportar Streaming
                         </button>
-                        <button class="btn-action" onclick="filtrarExpirados()">
+                        <button class="btn-action" onclick="filtrarExpiradosStreaming()">
                             <i class="fas fa-clock"></i>
                             Ver Expirados
                         </button>
-                        <button class="btn-action" onclick="mostrarTodos()">
+                        <button class="btn-action" onclick="mostrarActivosStreaming()">
                             <i class="fas fa-eye"></i>
-                            Ver Todos
+                            Solo Activos
+                        </button>
+                        <button class="btn-action" onclick="mostrarInactivosStreaming()">
+                            <i class="fas fa-eye-slash"></i>
+                            Ver Inactivos
+                        </button>
+                        <button class="btn-action" onclick="mostrarTodosStreaming()">
+                            <i class="fas fa-list"></i>
+                            Todos
+                        </button>
+                    </div>
+                    <div class="tab-actions" id="tab-actions-chatgpt" style="display: none;">
+                        <button class="btn-action" onclick="exportarExcelChatGPT()">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar ChatGPT
+                        </button>
+                        <button class="btn-action" onclick="filtrarExpiradosChatGPT()">
+                            <i class="fas fa-clock"></i>
+                            Ver Expirados
+                        </button>
+                        <button class="btn-action" onclick="mostrarActivosChatGPT()">
+                            <i class="fas fa-eye"></i>
+                            Solo Activos
+                        </button>
+                        <button class="btn-action" onclick="mostrarInactivosChatGPT()">
+                            <i class="fas fa-eye-slash"></i>
+                            Ver Inactivos
+                        </button>
+                        <button class="btn-action" onclick="mostrarTodosChatGPT()">
+                            <i class="fas fa-list"></i>
+                            Todos
                         </button>
                     </div>
                 </div>
 
-                <!-- Tab Ventas -->
-                <div id="tab-ventas" class="tab-content active">
+                <!-- Tab Streaming -->
+                <div id="tab-streaming" class="tab-content active">
                     <div class="table-container">
                         <div class="table-responsive">
-                            <table id="tablaVentas" class="data-table">
+                            <table id="tablaStreaming" class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-hashtag"></i>
-                                                ID
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-user"></i>
-                                                Cliente
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-play-circle"></i>
-                                                Servicio
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-calendar-clock"></i>
-                                                Expiración
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-clock"></i>
-                                                Tiempo Restante
-                                                <br><small class="header-sub">(Actualización en vivo)</small>
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-money-bill"></i>
-                                                Ganancia
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-battery"></i>
-                                                Estado
-                                            </div>
-                                        </th>
-                                        <th>
-                                            <div class="table-header-cell">
-                                                <i class="fas fa-cog"></i>
-                                                Acciones
-                                            </div>
-                                        </th>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Servicio</th>
+                                        <th>Expiración</th>
+                                        <th>Tiempo Restante</th>
+                                        <th>Ganancia</th>
+                                        <th>Etiquetas</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <!-- Las filas se generan dinámicamente -->
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tab Stats -->
-                <div id="tab-stats" class="tab-content">
+                <!-- Tab ChatGPT -->
+                <div id="tab-chatgpt" class="tab-content">
+                    <div class="chatgpt-dashboard">
+                        <!-- Cuentas ChatGPT -->
+                        <div class="chatgpt-section">
+                            <h3><i class="fas fa-box"></i> Cuentas Compradas</h3>
+                            <div class="table-container">
+                                <table id="tablaCuentasChatGPT" class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Fecha</th>
+                                            <th>Costo (S/)</th>
+                                            <th>Proveedor</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <button class="btn-primary btn-small" onclick="abrirModalNuevaCuentaChatGPT()">
+                                <i class="fas fa-plus"></i> Registrar Compra
+                            </button>
+                        </div>
+
+                        <!-- Accesos vendidos ChatGPT -->
+                        <div class="chatgpt-section">
+                            <h3><i class="fas fa-ticket-alt"></i> Accesos Vendidos</h3>
+                            <div class="table-container">
+                                <table id="tablaVentasChatGPT" class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>WhatsApp</th>
+                                            <th>Fecha Venta</th>
+                                            <th>Expiración</th>
+                                            <th>Tiempo Restante</th>
+                                            <th>Precio (S/)</th>
+                                            <th>Etiquetas</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <button class="btn-primary btn-small" onclick="abrirModalNuevaVentaChatGPT()">
+                                <i class="fas fa-plus"></i> Vender Acceso
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Analytics Streaming -->
+                <div id="tab-stats-streaming" class="tab-content">
                     <div class="charts-grid">
                         <div class="chart-card">
                             <div class="chart-header">
                                 <h3><i class="fas fa-chart-bar"></i> Rentabilidad por Mes</h3>
-                                <select class="chart-filter" id="chart-filter-bar" onchange="updateCharts()">
+                                <select class="chart-filter" id="chart-filter-bar-streaming" onchange="updateChartsStreaming()">
                                     <option value="6">Últimos 6 meses</option>
                                     <option value="12">Este año</option>
                                     <option value="all">Todo</option>
                                 </select>
                             </div>
-                            <canvas id="barChart"></canvas>
+                            <canvas id="barChartStreaming"></canvas>
                         </div>
-
                         <div class="chart-card">
                             <div class="chart-header">
                                 <h3><i class="fas fa-chart-pie"></i> Distribución de Servicios</h3>
                             </div>
-                            <canvas id="doughnutChart"></canvas>
+                            <canvas id="doughnutChartStreaming"></canvas>
                         </div>
-
                         <div class="chart-card">
                             <div class="chart-header">
                                 <h3><i class="fas fa-chart-line"></i> Tendencias de Ventas</h3>
-                                <select class="chart-filter" id="chart-filter-line" onchange="updateCharts()">
+                                <select class="chart-filter" id="chart-filter-line-streaming" onchange="updateChartsStreaming()">
                                     <option value="7">Últimos 7 días</option>
                                     <option value="30">Últimos 30 días</option>
                                     <option value="90">Últimos 90 días</option>
                                 </select>
                             </div>
-                            <canvas id="lineChart"></canvas>
+                            <canvas id="lineChartStreaming"></canvas>
                         </div>
-
                         <div class="chart-card">
                             <div class="chart-header">
                                 <h3><i class="fas fa-wallet"></i> Métodos de Pago</h3>
                             </div>
-                            <canvas id="paymentChart"></canvas>
+                            <canvas id="paymentChartStreaming"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tab Clientes -->
-                <div id="tab-clientes" class="tab-content">
-                    <div class="clients-container">
-                        <div class="clients-stats">
-                            <div class="client-stat-card">
-                                <i class="fas fa-user-plus"></i>
-                                <div>
-                                    <h4>Nuevos (30d)</h4>
-                                    <p class="stat-number" id="clientes-nuevos">0</p>
-                                </div>
+                <!-- Tab Analytics ChatGPT -->
+                <div id="tab-stats-chatgpt" class="tab-content">
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-bar"></i> Evolución Ventas ChatGPT</h3>
+                                <select class="chart-filter" id="chart-filter-bar-chatgpt" onchange="updateChartsChatGPT()">
+                                    <option value="6">Últimos 6 meses</option>
+                                    <option value="12">Este año</option>
+                                    <option value="all">Todo</option>
+                                </select>
                             </div>
-                            <div class="client-stat-card">
-                                <i class="fas fa-star"></i>
-                                <div>
-                                    <h4>Clientes VIP</h4>
-                                    <p class="stat-number" id="clientes-vip">0</p>
-                                </div>
-                            </div>
-                            <div class="client-stat-card">
-                                <i class="fas fa-sync-alt"></i>
-                                <div>
-                                    <h4>Renovaciones</h4>
-                                    <p class="stat-number" id="renovaciones">0</p>
-                                </div>
-                            </div>
+                            <canvas id="barChartChatGPT"></canvas>
                         </div>
-                        <div class="clients-list" id="clients-list">
-                            <!-- Lista de clientes se generará dinámicamente -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-pie"></i> Distribución de Precios</h3>
+                            </div>
+                            <canvas id="doughnutChartChatGPT"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-line"></i> Tendencias Diarias</h3>
+                                <select class="chart-filter" id="chart-filter-line-chatgpt" onchange="updateChartsChatGPT()">
+                                    <option value="7">Últimos 7 días</option>
+                                    <option value="30">Últimos 30 días</option>
+                                    <option value="90">Últimos 90 días</option>
+                                </select>
+                            </div>
+                            <canvas id="lineChartChatGPT"></canvas>
                         </div>
                     </div>
                 </div>
@@ -367,7 +487,7 @@
                 <div class="footer-content">
                     <div class="footer-left">
                         <span>© 2024 Rayo Shop. Todos los derechos reservados.</span>
-                        <span class="version">v2.1.0</span>
+                        <span class="version">v4.0.0</span>
                     </div>
                     <div class="footer-right">
                         <span class="live-indicator">
@@ -380,43 +500,39 @@
         </main>
     </div>
 
-    <!-- Modal Nueva Venta -->
-    <div id="modalVenta" class="modal">
+    <!-- Modal Nueva Venta Streaming -->
+    <div id="modalVentaStreaming" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-bolt"></i> Nueva Operación</h3>
-                <button class="modal-close" onclick="cerrarModal()">
+                <h3><i class="fas fa-bolt"></i> Nueva Venta Streaming</h3>
+                <button class="modal-close" onclick="cerrarModal('modalVentaStreaming')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="formVenta" class="modal-form">
+            <form id="formVentaStreaming" class="modal-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="cliente"><i class="fas fa-user"></i> Cliente *</label>
-                        <input type="text" id="cliente" required 
-                               placeholder="Nombre completo del cliente">
+                        <label><i class="fas fa-user"></i> Cliente *</label>
+                        <input type="text" id="clienteStreaming" required placeholder="Nombre completo">
                     </div>
                     <div class="form-group">
-                        <label for="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp *</label>
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp *</label>
                         <div class="input-with-prefix">
                             <span class="input-prefix">+51</span>
-                            <input type="tel" id="whatsapp" required 
-                                   placeholder="987654321">
+                            <input type="tel" id="whatsappStreaming" required placeholder="987654321">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="servicio"><i class="fas fa-play-circle"></i> Servicio *</label>
+                        <label><i class="fas fa-play-circle"></i> Servicio *</label>
                         <div class="input-with-suggestions">
-                            <input type="text" id="servicio" 
-                                   placeholder="Netflix, Disney+, HBO Max, etc."
-                                   oninput="mostrarSugerenciasServicios()"
-                                   required>
-                            <div id="sugerencias-servicios" class="sugerencias-container"></div>
+                            <input type="text" id="servicioStreaming" placeholder="Netflix, Disney+..."
+                                   oninput="mostrarSugerenciasServiciosStreaming()" required>
+                            <div id="sugerencias-servicios-streaming" class="sugerencias-container"></div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="plan"><i class="fas fa-tv"></i> Plan</label>
-                        <select id="plan" class="styled-select">
+                        <label><i class="fas fa-tv"></i> Plan</label>
+                        <select id="planStreaming" class="styled-select">
                             <option value="1 Pantalla">1 Pantalla</option>
                             <option value="2 Pantallas">2 Pantallas</option>
                             <option value="4 Pantallas">4 Pantallas</option>
@@ -425,109 +541,187 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="correo"><i class="fas fa-envelope"></i> Correo *</label>
-                        <input type="email" id="correo" required 
-                               placeholder="cuenta@ejemplo.com">
+                        <label><i class="fas fa-envelope"></i> Correo *</label>
+                        <input type="email" id="correoStreaming" required placeholder="cuenta@ejemplo.com">
                     </div>
                     <div class="form-group">
-                        <label for="clave"><i class="fas fa-key"></i> Contraseña *</label>
-                        <input type="text" id="clave" required 
-                               placeholder="PIN o contraseña">
+                        <label><i class="fas fa-key"></i> Contraseña *</label>
+                        <input type="text" id="claveStreaming" required placeholder="Contraseña">
                     </div>
                     <div class="form-group">
-                        <label for="perfil"><i class="fas fa-id-card"></i> Perfil</label>
-                        <input type="text" id="perfil" 
-                               placeholder="Nombre del perfil asignado">
+                        <label><i class="fas fa-id-card"></i> Perfil</label>
+                        <input type="text" id="perfilStreaming" placeholder="Perfil asignado">
                     </div>
                     <div class="form-group">
-                        <label for="metodoPago"><i class="fas fa-credit-card"></i> Pago</label>
-                        <select id="metodoPago" class="styled-select">
+                        <label><i class="fas fa-credit-card"></i> Método Pago</label>
+                        <select id="metodoPagoStreaming" class="styled-select">
                             <option value="Yape">Yape</option>
                             <option value="Plin">Plin</option>
                             <option value="Transferencia">Transferencia</option>
                             <option value="Efectivo">Efectivo</option>
-                            <option value="Tarjeta">Tarjeta</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="precio"><i class="fas fa-tag"></i> Precio Venta (S/) *</label>
-                        <input type="number" id="precio" required 
-                               step="0.01" min="0"
-                               placeholder="0.00" oninput="calcularGananciaForm()">
+                        <label><i class="fas fa-tag"></i> Precio Venta (S/) *</label>
+                        <input type="number" id="precioStreaming" required step="0.01" min="0" placeholder="0.00" oninput="calcularGananciaStreaming()">
                     </div>
                     <div class="form-group">
-                        <label for="costo"><i class="fas fa-money-bill-wave"></i> Costo (S/) *</label>
-                        <input type="number" id="costo" required 
-                               step="0.01" min="0"
-                               placeholder="0.00" oninput="calcularGananciaForm()">
+                        <label><i class="fas fa-money-bill-wave"></i> Costo (S/) *</label>
+                        <input type="number" id="costoStreaming" required step="0.01" min="0" placeholder="0.00" oninput="calcularGananciaStreaming()">
                     </div>
                     <div class="form-group">
-                        <label for="fechaVenta"><i class="fas fa-calendar"></i> Fecha *</label>
-                        <input type="date" id="fechaVenta" required>
+                        <label><i class="fas fa-calendar"></i> Fecha *</label>
+                        <input type="date" id="fechaVentaStreaming" required>
                     </div>
                     <div class="form-group">
-                        <label for="duracion"><i class="fas fa-clock"></i> Duración (días) *</label>
-                        <input type="number" id="duracion" required 
-                               min="1" value="30">
+                        <label><i class="fas fa-clock"></i> Duración (días) *</label>
+                        <input type="number" id="duracionStreaming" required min="1" value="30">
                     </div>
                     <div class="form-group">
-                        <label for="vendedor"><i class="fas fa-user-tie"></i> Vendedor</label>
-                        <input type="text" id="vendedor" placeholder="Nombre del vendedor">
+                        <label><i class="fas fa-user-tie"></i> Vendedor</label>
+                        <input type="text" id="vendedorStreaming" placeholder="Nombre del vendedor">
                     </div>
                     <div class="form-group">
-                        <label for="observaciones"><i class="fas fa-sticky-note"></i> Observaciones</label>
-                        <textarea id="observaciones" rows="2" placeholder="Observaciones adicionales..."></textarea>
+                        <label><i class="fas fa-sticky-note"></i> Observaciones</label>
+                        <textarea id="observacionesStreaming" rows="2"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="prioridad"><i class="fas fa-flag"></i> Prioridad</label>
-                        <select id="prioridad" class="styled-select">
+                        <label><i class="fas fa-flag"></i> Prioridad</label>
+                        <select id="prioridadStreaming" class="styled-select">
                             <option value="normal">Normal</option>
                             <option value="alta">Alta</option>
                             <option value="urgente">Urgente</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Etiquetas</label>
+                        <input type="text" id="etiquetasStreaming" placeholder="YA PAGO, RENOVACION PENDIENTE, etc.">
+                        <small style="color:var(--text-muted)">Separadas por coma</small>
+                    </div>
                 </div>
                 <div class="form-summary">
                     <div class="summary-item">
                         <span>Ganancia Estimada:</span>
-                        <strong id="gananciaPreview">S/ 0.00</strong>
+                        <strong id="gananciaPreviewStreaming">S/ 0.00</strong>
                     </div>
                     <div class="summary-item">
                         <span>Margen:</span>
-                        <strong id="margenPreview">0%</strong>
+                        <strong id="margenPreviewStreaming">0%</strong>
                     </div>
                     <div class="summary-item">
                         <span>ROI:</span>
-                        <strong id="roiPreview">0%</strong>
+                        <strong id="roiPreviewStreaming">0%</strong>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="cerrarModal()">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-bolt"></i>
-                        Registrar Operación
-                    </button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modalVentaStreaming')">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-bolt"></i> Registrar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Notificaciones -->
-    <div id="modalNotificaciones" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
+    <!-- Modal Nueva Venta ChatGPT -->
+    <div id="modalVentaChatGPT" class="modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-bell"></i> Notificaciones</h3>
-                <button class="modal-close" onclick="cerrarModalNotificaciones()">
+                <h3><i class="fas fa-robot"></i> Nuevo Acceso ChatGPT</h3>
+                <button class="modal-close" onclick="cerrarModal('modalVentaChatGPT')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div id="lista-notificaciones">
-                    <!-- Notificaciones dinámicas -->
+            <form id="formVentaChatGPT" class="modal-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Cliente *</label>
+                        <input type="text" id="clienteChatGPT" required placeholder="Nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp *</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">+51</span>
+                            <input type="tel" id="whatsappChatGPT" required placeholder="987654321">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Precio Venta (S/) *</label>
+                        <input type="number" id="precioChatGPT" required step="0.01" min="0" value="7" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Fecha Venta *</label>
+                        <input type="date" id="fechaVentaChatGPT" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Duración (días) *</label>
+                        <input type="number" id="duracionChatGPT" required min="1" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Etiquetas</label>
+                        <input type="text" id="etiquetasChatGPT" placeholder="YA PAGO, RENOVACION PENDIENTE, etc.">
+                        <small style="color:var(--text-muted)">Separadas por coma</small>
+                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modalVentaChatGPT')">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nueva Cuenta ChatGPT -->
+    <div id="modalCuentaChatGPT" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-cart-plus"></i> Registrar Compra de Cuenta ChatGPT</h3>
+                <button class="modal-close" onclick="cerrarModal('modalCuentaChatGPT')">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+            <form id="formCuentaChatGPT" class="modal-form">
+                <div class="form-group">
+                    <label>Fecha de Compra *</label>
+                    <input type="date" id="fechaCompraChatGPT" required>
+                </div>
+                <div class="form-group">
+                    <label>Costo (S/) *</label>
+                    <input type="number" id="costoCuentaChatGPT" step="0.01" min="0" required value="40">
+                </div>
+                <div class="form-group">
+                    <label>Proveedor / Nota</label>
+                    <input type="text" id="proveedorChatGPT" placeholder="Ej: Panel X">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modalCuentaChatGPT')">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Notificaciones Streaming -->
+    <div id="modalNotificacionesStreaming" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-bell"></i> Notificaciones Streaming</h3>
+                <button class="modal-close" onclick="cerrarModal('modalNotificacionesStreaming')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="lista-notificaciones-streaming"></div>
+        </div>
+    </div>
+
+    <!-- Modal Notificaciones ChatGPT -->
+    <div id="modalNotificacionesChatGPT" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-bell"></i> Notificaciones ChatGPT</h3>
+                <button class="modal-close" onclick="cerrarModal('modalNotificacionesChatGPT')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="lista-notificaciones-chatgpt"></div>
         </div>
     </div>
 

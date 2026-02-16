@@ -9,7 +9,12 @@
     --danger: #f94144;
     --info: #4895ef;
     
-    /* Fondo */
+    /* Colores ChatGPT */
+    --chatgpt-primary: #10a37f;
+    --chatgpt-secondary: #0e8c6e;
+    --chatgpt-accent: #74aa9c;
+    
+    /* Fondos */
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
     --bg-tertiary: #334155;
@@ -39,6 +44,7 @@
     --gradient-danger: linear-gradient(135deg, #f94144, #dc2626);
     --gradient-investment: linear-gradient(135deg, #7209b7, #560bad);
     --gradient-margin: linear-gradient(135deg, #10b981, #059669);
+    --gradient-chatgpt: linear-gradient(135deg, #10a37f, #0e8c6e);
 }
 
 /* Reset y base */
@@ -64,9 +70,9 @@ body {
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background: var(--glass-bg);
+    background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
-    border-right: 1px solid var(--glass-border);
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
@@ -349,7 +355,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-.date-display {
+#current-date {
     color: var(--text-secondary);
     font-size: 14px;
     font-weight: 400;
@@ -457,9 +463,9 @@ body {
 }
 
 .stat-card {
-    background: var(--glass-bg);
+    background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: 24px;
     display: flex;
@@ -543,9 +549,9 @@ body {
 
 /* Content Tabs */
 .content-tabs {
-    background: var(--glass-bg);
+    background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     overflow: hidden;
     animation: slideIn 0.5s ease-out;
@@ -642,7 +648,7 @@ body {
     background: rgba(255, 255, 255, 0.02);
 }
 
-.table-header-cell {
+.data-table th {
     padding: 16px;
     text-align: left;
     font-weight: 600;
@@ -650,17 +656,6 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.header-sub {
-    font-size: 10px;
-    opacity: 0.7;
-    font-weight: normal;
-    display: block;
-    margin-top: 2px;
 }
 
 .data-table tbody tr {
@@ -687,7 +682,7 @@ body {
     vertical-align: middle;
 }
 
-/* Badges y estados */
+/* Badges */
 .badge-id {
     background: rgba(255, 255, 255, 0.05);
     padding: 4px 8px;
@@ -695,32 +690,6 @@ body {
     font-family: 'Courier New', monospace;
     font-size: 12px;
     font-weight: 600;
-}
-
-.client-info strong {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.client-info small {
-    display: block;
-    color: var(--text-secondary);
-    font-size: 12px;
-    margin-bottom: 4px;
-}
-
-.contact-info {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: #25d366;
-    font-size: 12px;
-}
-
-.service-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 .service-icon {
@@ -789,31 +758,10 @@ body {
     font-weight: 800;
 }
 
-.expiration-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
 .expiration-date {
     font-size: 13px;
     color: var(--text-secondary);
-}
-
-.profit-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.profit-amount {
-    font-size: 16px;
-    font-weight: 700;
-    color: #10b981;
-}
-
-.profit-margin {
-    font-size: 12px;
-    color: var(--text-secondary);
+    margin-top: 4px;
 }
 
 /* Status badges */
@@ -833,12 +781,6 @@ body {
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.status-badge.warning {
-    background: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .status-badge.expired {
@@ -917,6 +859,16 @@ body {
     transform: scale(1.1);
 }
 
+.btn-success {
+    background: var(--success);
+    color: #0f172a;
+}
+
+.btn-success:hover {
+    background: #3ab7e0;
+    transform: scale(1.1);
+}
+
 /* Charts */
 .charts-grid {
     display: grid;
@@ -974,9 +926,9 @@ body {
 }
 
 .modal-content {
-    background: var(--glass-bg);
+    background: rgba(30, 41, 59, 0.95);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 900px;
@@ -1325,4 +1277,119 @@ textarea:focus {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary-dark);
+}
+
+/* Estilos ChatGPT */
+.chatgpt-card {
+    border-left: 4px solid var(--chatgpt-primary) !important;
+}
+
+.chatgpt-icon {
+    background: var(--gradient-chatgpt) !important;
+}
+
+.chatgpt-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.chatgpt-section h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--chatgpt-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chatgpt-chart {
+    border-top: 3px solid var(--chatgpt-primary);
+}
+
+.chatgpt-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 1000px) {
+    .chatgpt-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Etiquetas */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tag-badge {
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--primary);
+    border: 1px solid rgba(67, 97, 238, 0.3);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tag-badge:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.tag-badge.ya-pago {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-color: #10b981;
+}
+
+.tag-badge.renovacion-pendiente {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border-color: #f59e0b;
+    animation: parpadeo 1.5s infinite;
+}
+
+.tag-badge.urgente {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: #ef4444;
+    animation: parpadeo 1s infinite;
+}
+
+.tag-badge.cliente-vip {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8b5cf6;
+    border-color: #8b5cf6;
+}
+
+@keyframes parpadeo {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Botón pequeño */
+.btn-small {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+/* Filas inactivas */
+tr.inactive-row {
+    opacity: 0.6;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+tr.inactive-row td {
+    text-decoration: line-through 1px rgba(239,68,68,0.3);
 }

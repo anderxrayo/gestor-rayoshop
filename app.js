@@ -317,6 +317,9 @@ function renderStreaming() {
                     <button class="btn-icon btn-edit" onclick="editarVentaStreaming(${v.id})"><i class="fas fa-edit"></i></button>
                     <button class="btn-icon btn-whatsapp" onclick="enviarRecordatorioStreaming(${v.id})"><i class="fab fa-whatsapp"></i></button>
                     ${v.estado === 'activo' 
+                        ? `<button class="btn-icon btn-renew" onclick="renovarVentaStreaming(${v.id})"><i class="fas fa-sync-alt"></i></button>` 
+                        : ''}
+                    ${v.estado === 'activo' 
                         ? `<button class="btn-icon btn-delete" onclick="eliminarVentaStreaming(${v.id})"><i class="fas fa-trash"></i></button>` 
                         : `<button class="btn-icon btn-success" onclick="restaurarVentaStreaming(${v.id})"><i class="fas fa-undo"></i></button>`}
                 </div>
@@ -392,6 +395,45 @@ function enviarRecordatorioStreaming(id) {
     const diasRestantes = Math.ceil((fechaFin - new Date()) / 86400000);
     let mensaje = `Hola, tu servicio de ${venta.servicio} vence en ${diasRestantes} días. ¿Renuevas?`;
     window.open(`https://wa.me/51${venta.whatsapp}?text=${encodeURIComponent(mensaje)}`);
+}
+
+// NUEVA FUNCIÓN: Renovar venta de Streaming (acumula días restantes)
+function renovarVentaStreaming(id) {
+    const ventaOriginal = ventasStreaming.find(v => v.id === id);
+    if (!ventaOriginal) return;
+    
+    if (!confirm('¿Estás seguro que quieres renovar el servicio? Se creará una nueva venta con los mismos datos y se sumarán los días restantes.')) {
+        return;
+    }
+    
+    const fechaOriginal = new Date(ventaOriginal.fecha);
+    const fechaFinOriginal = new Date(fechaOriginal.getTime() + ventaOriginal.dias * 86400000);
+    const ahora = new Date();
+    let diasRestantes = 0;
+    if (fechaFinOriginal > ahora) {
+        diasRestantes = Math.ceil((fechaFinOriginal - ahora) / 86400000);
+    }
+    const nuevosDias = ventaOriginal.dias + diasRestantes;
+    
+    const nuevaVenta = {
+        ...ventaOriginal,
+        id: Date.now(),
+        fecha: ahora.toISOString().split('T')[0],
+        dias: nuevosDias,
+        estado: 'activo',
+        fechaRegistro: new Date().toISOString(),
+        etiquetas: [...(ventaOriginal.etiquetas || []), 'RENOVACION']
+    };
+    
+    ventasStreaming.push(nuevaVenta);
+    localStorage.setItem('rayo_shop_ultra', JSON.stringify(ventasStreaming));
+    
+    renderStreaming();
+    updateChartsStreaming();
+    actualizarNotificacionesStreaming();
+    actualizarStorage();
+    
+    showToast('Servicio renovado correctamente (días acumulados)', 'success');
 }
 
 function filtrarVentasStreaming() {
@@ -715,6 +757,9 @@ function renderChatGPT() {
                         <button class="btn-icon btn-edit" onclick="editarVentaChatGPT(${v.id})"><i class="fas fa-edit"></i></button>
                         <button class="btn-icon btn-whatsapp" onclick="enviarRecordatorioChatGPT(${v.id})"><i class="fab fa-whatsapp"></i></button>
                         ${v.estado === 'activo' 
+                            ? `<button class="btn-icon btn-renew" onclick="renovarVentaChatGPT(${v.id})"><i class="fas fa-sync-alt"></i></button>` 
+                            : ''}
+                        ${v.estado === 'activo' 
                             ? `<button class="btn-icon btn-delete" onclick="eliminarVentaChatGPT(${v.id})"><i class="fas fa-trash"></i></button>` 
                             : `<button class="btn-icon btn-success" onclick="restaurarVentaChatGPT(${v.id})"><i class="fas fa-undo"></i></button>`}
                     </div>
@@ -802,6 +847,45 @@ function enviarRecordatorioChatGPT(id) {
     const diasRestantes = Math.ceil((fechaFin - new Date()) / 86400000);
     let mensaje = `Hola, tu acceso a ChatGPT vence en ${diasRestantes} días. ¿Renuevas?`;
     window.open(`https://wa.me/51${venta.whatsapp}?text=${encodeURIComponent(mensaje)}`);
+}
+
+// NUEVA FUNCIÓN: Renovar venta de ChatGPT (acumula días restantes)
+function renovarVentaChatGPT(id) {
+    const ventaOriginal = ventasChatGPT.find(v => v.id === id);
+    if (!ventaOriginal) return;
+    
+    if (!confirm('¿Estás seguro que quieres renovar el acceso? Se creará una nueva venta con los mismos datos y se sumarán los días restantes.')) {
+        return;
+    }
+    
+    const fechaOriginal = new Date(ventaOriginal.fecha);
+    const fechaFinOriginal = new Date(fechaOriginal.getTime() + ventaOriginal.dias * 86400000);
+    const ahora = new Date();
+    let diasRestantes = 0;
+    if (fechaFinOriginal > ahora) {
+        diasRestantes = Math.ceil((fechaFinOriginal - ahora) / 86400000);
+    }
+    const nuevosDias = ventaOriginal.dias + diasRestantes;
+    
+    const nuevaVenta = {
+        ...ventaOriginal,
+        id: Date.now(),
+        fecha: ahora.toISOString().split('T')[0],
+        dias: nuevosDias,
+        estado: 'activo',
+        fechaRegistro: new Date().toISOString(),
+        etiquetas: [...(ventaOriginal.etiquetas || []), 'RENOVACION']
+    };
+    
+    ventasChatGPT.push(nuevaVenta);
+    localStorage.setItem('chatgpt_ventas', JSON.stringify(ventasChatGPT));
+    
+    renderChatGPT();
+    updateChartsChatGPT();
+    actualizarNotificacionesChatGPT();
+    actualizarStorage();
+    
+    showToast('Acceso renovado correctamente (días acumulados)', 'success');
 }
 
 function filtrarVentasChatGPT() {
@@ -1172,6 +1256,7 @@ window.editarVentaStreaming = editarVentaStreaming;
 window.eliminarVentaStreaming = eliminarVentaStreaming;
 window.restaurarVentaStreaming = restaurarVentaStreaming;
 window.enviarRecordatorioStreaming = enviarRecordatorioStreaming;
+window.renovarVentaStreaming = renovarVentaStreaming; // NUEVA
 window.filtrarVentasChatGPT = filtrarVentasChatGPT;
 window.filtrarExpiradosChatGPT = filtrarExpiradosChatGPT;
 window.mostrarActivosChatGPT = mostrarActivosChatGPT;
@@ -1184,6 +1269,7 @@ window.restaurarVentaChatGPT = restaurarVentaChatGPT;
 window.eliminarCuentaChatGPT = eliminarCuentaChatGPT;
 window.restaurarCuentaChatGPT = restaurarCuentaChatGPT;
 window.enviarRecordatorioChatGPT = enviarRecordatorioChatGPT;
+window.renovarVentaChatGPT = renovarVentaChatGPT; // NUEVA
 window.mostrarNotificacionesStreaming = mostrarNotificacionesStreaming;
 window.mostrarNotificacionesChatGPT = mostrarNotificacionesChatGPT;
 window.descargarBackupStreaming = descargarBackupStreaming;

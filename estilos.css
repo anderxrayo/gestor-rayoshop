@@ -869,6 +869,15 @@ body {
     transform: scale(1.1);
 }
 
+/* Nuevo botón de renovar */
+.btn-renew {
+    background: #f59e0b; /* naranja */
+}
+.btn-renew:hover {
+    background: #d97706;
+    transform: scale(1.1);
+}
+
 /* Charts */
 .charts-grid {
     display: grid;

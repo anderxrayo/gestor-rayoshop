@@ -397,35 +397,48 @@ function enviarRecordatorioStreaming(id) {
     window.open(`https://wa.me/51${venta.whatsapp}?text=${encodeURIComponent(mensaje)}`);
 }
 
-// NUEVA FUNCIÓN: Renovar venta de Streaming (acumula días restantes)
+// NUEVA FUNCIÓN: Renovar venta de Streaming (fecha de inicio = fecha de vencimiento anterior)
 function renovarVentaStreaming(id) {
     const ventaOriginal = ventasStreaming.find(v => v.id === id);
     if (!ventaOriginal) return;
     
-    if (!confirm('¿Estás seguro que quieres renovar el servicio? Se creará una nueva venta con los mismos datos y se sumarán los días restantes.')) {
+    if (!confirm('¿Estás seguro que quieres renovar el servicio? Se creará una nueva venta con los mismos datos a partir de la fecha de vencimiento actual y la venta anterior quedará como inactiva.')) {
         return;
     }
     
+    // Calcular fecha de vencimiento de la venta original
     const fechaOriginal = new Date(ventaOriginal.fecha);
     const fechaFinOriginal = new Date(fechaOriginal.getTime() + ventaOriginal.dias * 86400000);
     const ahora = new Date();
-    let diasRestantes = 0;
-    if (fechaFinOriginal > ahora) {
-        diasRestantes = Math.ceil((fechaFinOriginal - ahora) / 86400000);
-    }
-    const nuevosDias = ventaOriginal.dias + diasRestantes;
     
+    // La nueva fecha de inicio será la fecha de vencimiento original si aún no ha pasado, o la fecha actual si ya pasó
+    let nuevaFechaInicio;
+    if (fechaFinOriginal > ahora) {
+        nuevaFechaInicio = new Date(fechaFinOriginal);
+    } else {
+        nuevaFechaInicio = new Date(ahora);
+    }
+    // Formatear a YYYY-MM-DD
+    const nuevaFechaStr = nuevaFechaInicio.toISOString().split('T')[0];
+    
+    // Crear nueva venta con los mismos datos, pero nueva fecha y duración normal (la misma duración)
     const nuevaVenta = {
         ...ventaOriginal,
         id: Date.now(),
-        fecha: ahora.toISOString().split('T')[0],
-        dias: nuevosDias,
+        fecha: nuevaFechaStr,
+        dias: ventaOriginal.dias, // mantener la misma duración (ej. 30)
         estado: 'activo',
         fechaRegistro: new Date().toISOString(),
         etiquetas: [...(ventaOriginal.etiquetas || []), 'RENOVACION']
     };
     
+    // Marcar la venta original como inactiva
+    ventaOriginal.estado = 'inactivo';
+    
+    // Agregar nueva venta
     ventasStreaming.push(nuevaVenta);
+    
+    // Guardar cambios
     localStorage.setItem('rayo_shop_ultra', JSON.stringify(ventasStreaming));
     
     renderStreaming();
@@ -433,7 +446,7 @@ function renovarVentaStreaming(id) {
     actualizarNotificacionesStreaming();
     actualizarStorage();
     
-    showToast('Servicio renovado correctamente (días acumulados)', 'success');
+    showToast('Servicio renovado correctamente (nueva vigencia a partir del vencimiento anterior)', 'success');
 }
 
 function filtrarVentasStreaming() {
@@ -849,35 +862,40 @@ function enviarRecordatorioChatGPT(id) {
     window.open(`https://wa.me/51${venta.whatsapp}?text=${encodeURIComponent(mensaje)}`);
 }
 
-// NUEVA FUNCIÓN: Renovar venta de ChatGPT (acumula días restantes)
+// NUEVA FUNCIÓN: Renovar venta de ChatGPT (análoga a streaming)
 function renovarVentaChatGPT(id) {
     const ventaOriginal = ventasChatGPT.find(v => v.id === id);
     if (!ventaOriginal) return;
     
-    if (!confirm('¿Estás seguro que quieres renovar el acceso? Se creará una nueva venta con los mismos datos y se sumarán los días restantes.')) {
+    if (!confirm('¿Estás seguro que quieres renovar el acceso? Se creará una nueva venta con los mismos datos a partir de la fecha de vencimiento actual y la venta anterior quedará como inactiva.')) {
         return;
     }
     
     const fechaOriginal = new Date(ventaOriginal.fecha);
     const fechaFinOriginal = new Date(fechaOriginal.getTime() + ventaOriginal.dias * 86400000);
     const ahora = new Date();
-    let diasRestantes = 0;
+    
+    let nuevaFechaInicio;
     if (fechaFinOriginal > ahora) {
-        diasRestantes = Math.ceil((fechaFinOriginal - ahora) / 86400000);
+        nuevaFechaInicio = new Date(fechaFinOriginal);
+    } else {
+        nuevaFechaInicio = new Date(ahora);
     }
-    const nuevosDias = ventaOriginal.dias + diasRestantes;
+    const nuevaFechaStr = nuevaFechaInicio.toISOString().split('T')[0];
     
     const nuevaVenta = {
         ...ventaOriginal,
         id: Date.now(),
-        fecha: ahora.toISOString().split('T')[0],
-        dias: nuevosDias,
+        fecha: nuevaFechaStr,
+        dias: ventaOriginal.dias,
         estado: 'activo',
         fechaRegistro: new Date().toISOString(),
         etiquetas: [...(ventaOriginal.etiquetas || []), 'RENOVACION']
     };
     
+    ventaOriginal.estado = 'inactivo';
     ventasChatGPT.push(nuevaVenta);
+    
     localStorage.setItem('chatgpt_ventas', JSON.stringify(ventasChatGPT));
     
     renderChatGPT();
@@ -885,7 +903,7 @@ function renovarVentaChatGPT(id) {
     actualizarNotificacionesChatGPT();
     actualizarStorage();
     
-    showToast('Acceso renovado correctamente (días acumulados)', 'success');
+    showToast('Acceso renovado correctamente (nueva vigencia a partir del vencimiento anterior)', 'success');
 }
 
 function filtrarVentasChatGPT() {
